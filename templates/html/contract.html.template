@@ -7,11 +7,14 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://{{staticServer}}/static/js/api.js"></script>
     <script src="../js/{{contractName}}.js"></script>
+    <script type="text/javascript">
+        var module = window.module = blockApps.modules['{{contractName}}'];
+    </script>
   </head>
-  <body onload="hideOnLoad{{contractName}}()">
+  <body onload="module.render()">
     <div id="authButtonDiv">
-      <button onclick="showRegister{{contractName}}()">Register</button>
-      <button onclick="showLogin{{contractName}}()">Login</button>
+        <button onclick="module.showRegister()">Register</button>
+      <button onclick="module.showRegister()">Login</button>
     </div>
     <div id="createUser{{contractName}}Div">
       <p id="user-intro"> Now, please register your wallet with us!</p>
@@ -21,12 +24,12 @@
       <input type="password" name="loginpass" id="loginpassCreateUser" required />
       <label for="loginpass">Password</label>
 
-      <input type="hidden" name="enckey" id="enckeyCreateUser" required />
+      <!--<input type="hidden" name="enckey" id="enckeyCreateUser" required />-->
       <input type="text" name="address" id="addressCreateUser" readonly required />
       <label for="address">Address</label>
 
-      <input type="hidden" name="app" id="appCreateUser" value="{{appName}}" required />
-      <button id="user-button" onclick="submit{{contractName}}()">Register</button>
+      <!--<input type="hidden" name="app" id="appCreateUser" value="{{appName}}" required />-->
+      <button id="user-button" onclick="module.signup()">Register</button>
     </div>
     <div id="login{{contractName}}Div">
       <p id="login-intro"> If you are a user who has registered, please login now.</p>
@@ -40,15 +43,15 @@
       <input type="text" name="address" id="addressLogin" required />
       <label for="address">Address</label>
 
-      <input type="hidden" name="app" id="appLogin" value="{{appName}}" required />
-      <button id="user-button" onclick="retrieve{{contractName}}()">Login!</button>
+      <!--<input type="hidden" name="app" id="appLogin" value="{{appName}}" required />-->
+      <button id="user-button" onclick="module.login()">Login!</button>
     </div>
 
     <div id="keygen{{contractName}}Div">
       <p id="key-intro"> First we will generate a key. Protect it with a high entropy password. The key will e sent to you in email, encrypted, after you verify your login.</p>
       <input type="password" name="keypass" id="keypass" />
       <label for="keypass">Enter a high entropy password</label>
-      <button id="keygen-button" onclick="genKeyUser()">Generate key</button>
+      <button id="keygen-button" onclick="module.genKeyUser()">Generate key</button>
     </div>
     <div id="wallet{{contractName}}Div">
         <input name="walletaddress" id="walletaddress" readonly />
@@ -58,7 +61,7 @@
     <div id="functions{{contractName}}Div">
 	    {{#funcs}}
 	    	<div id="{{name}}Div">
-			<button onclick="call{{name}}()">{{name}}</button>
+			<button onclick="module.call{{name}}()">{{name}}</button>
 			{{#args}}
 			<input type="text" name="{{argName}}" id="{{name}}{{argName}}" />
 			{{/args}}
