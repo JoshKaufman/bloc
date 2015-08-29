@@ -1,13 +1,12 @@
 var Contract = require('Contract');
-
 var blockApps = blockApps || {};
 var modules = blocks.modules || {};
-blockApps.modules['{{contractName}}'] = (function(
+
+modules['{{contractName}}'] = (function(
     apiURL,
     contractName,
     appAddress,
-    xAbiString
-){
+    xAbiString){
     var globalKeystore;
     var faucetEndpoint = apiURL + '/etc/' + apiVersion + '/faucet';
     var userObj = getUserObj();
@@ -17,7 +16,6 @@ blockApps.modules['{{contractName}}'] = (function(
 
     var terminal = {
         _banner: 'TX returned: ',
-        _tickers: [],
         TXLine: function (result) {
             this._ticker_banner = this._banner + (
                 (result === undefined)
@@ -27,7 +25,7 @@ blockApps.modules['{{contractName}}'] = (function(
                 'Contract storage state: \n\n';
         },
         createTickerBuffer: function ( storageKeys ) {
-            this.tickers = [];
+            this.tickers = [this._ticker_banner];
             return (function () {
                 for ( var svar in storageKeys ) {
                     this._tickers.push( [svar, storageKeys[svar]].join(' = ') );
@@ -61,9 +59,6 @@ blockApps.modules['{{contractName}}'] = (function(
             message.set('Confirm in your email. ' +
                 'This is your new wallet file: \n\n' + res);
             var faucetAddr = JSON.parse(data.encrypedWallet).addresses;
-            textElm.setAttribute('id', 'walletCreateMessage');
-            textElm.appendChild(textElm);
-            document.body.appendChild(textElm);
             console.log('wallet: ' + data.encryptedWallet);
             console.log('addresses: ' + faucetAddr);
             faucetReq = blocPostXHR(faucetEndpoint, {
@@ -95,7 +90,6 @@ blockApps.modules['{{contractName}}'] = (function(
     }
 
     function genKeyUser (keyPass) {
-
         console.log('moving from keygen to create user');
         genKey(keyPass, function (keystore) {
             walletAddress = keystore.addresses[0]
@@ -137,8 +131,10 @@ blockApps.modules['{{contractName}}'] = (function(
     };
 
     function updateUI () {
-        var registerWidget = toggleWidget(!walletCreated && authWidget === 'register',
-                getContainer('createUser')),
+        var registerWidget = toggleWidget(
+                (!walletCreated && authWidget === 'register'),
+                getContainer('createUser')
+            ),
             loginWindget = toggleWidget(!walletCreated && authWidget === 'login',
                 getContainer('login')),
             walletUnlocker = toggleWidget(walletCreated || _user,
@@ -163,9 +159,8 @@ blockApps.modules['{{contractName}}'] = (function(
         }
     }
 
-
     {{#funcs}}
-    function call{{name}}() {
+    function call{{name}} () {
         var args = {{{args}}};
         var fArgs = {};
         console.log('globalKeystore: ' + JSON.stringify(globalKeystore);
@@ -196,5 +191,5 @@ blockApps.modules['{{contractName}}'] = (function(
         }, fArgs);
     }
     {{/funcs}}
-})('{{{confURL}}}', '{{contractName}}', "{{address}}", {{{xAbiString}}});
+})('{{{confURL}}}', '{{contractName}}', '{{address}}', {{{xAbiString}}});
 
